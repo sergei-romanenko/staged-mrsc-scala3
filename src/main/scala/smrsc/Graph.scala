@@ -169,58 +169,54 @@ object Graph {
   // Extracting a graph of minimal size (if any).
   //
 
-  def graph_size[C]: Graph[C] => Int = {
-    case Back(_) => 1
-    case Forth(_, gs) => 1 + gs.map(graph_size).sum
+  def graph_size[C]: Graph[C] => Long = {
+    case Back(_) => 1L
+    case Forth(_, gs) =>
+      1L + gs.map(graph_size).sum
   }
 
   // Now we define a cleaner `cl_min_size` that produces a lazy graph
   // representing the smallest graph (or the empty set of graphs).
 
-  // We use a trick: ∞ is represented by -1 in (-1 , Empty).
+  // We use a trick: ∞ is represented by Long.MaxValue in
+  // (Long.MaxValue , Empty).
 
-  def select_min2[C](kx1: (Int, C), kx2: (Int, C)): (Int, C) =
-    (kx1, kx2) match {
-      case ((-1, _), (k2, x2)) => (k2, x2)
-      case ((k1, x1), (-1, _)) => (k1, x1)
-      case ((k1, x1), (k2, x2)) =>
-        if (k1 <= k2) (k1, x1) else (k2, x2)
-    }
-
-  def select_min[A](m: A): List[(Int, A)] => (Int, A) = {
-    case Nil => (-1, m)
-    case kx :: kxs =>
-      kxs.foldLeft(kx)(select_min2)
-  }
-
-  def cl_min_size[C]: LazyGraph[C] => (Int, LazyGraph[C]) = {
+  def cl_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) = {
     case Empty =>
-      (-1, Empty)
+      (Long.MaxValue, Empty)
     case Stop(c) =>
-      (1, Stop(c))
+      (1L, Stop(c))
     case Build(c, lss) =>
       cl_min_size2(lss) match {
-        case (-1, _) => (-1, Empty)
-        case (k, ls) => (1 + k, Build(c, List(ls)))
+        case (Long.MaxValue, _) => (Long.MaxValue, Empty)
+        case (k, ls) => (1L + k, Build(c, List(ls)))
       }
   }
 
-  def cl_min_size2[C]: List[List[LazyGraph[C]]] => (Int, List[LazyGraph[C]]) = {
+  def select_min2[C](kx1: (Long, C), kx2: (Long, C)): (Long, C) = {
+    if (kx1._1 <= kx2._1) kx1 else kx2
+  }
+
+  def cl_min_size2[C]: List[List[LazyGraph[C]]] => (Long, List[LazyGraph[C]]) = {
     case Nil =>
-      (-1, Nil)
+      (Long.MaxValue, Nil)
     case ls :: lss =>
       select_min2(cl_min_size_and(ls), cl_min_size2(lss))
   }
 
-  def cl_min_size_and[C]: List[LazyGraph[C]] => (Int, List[LazyGraph[C]]) = {
+  def cl_min_size_and[C]: List[LazyGraph[C]] => (Long, List[LazyGraph[C]]) = {
     case Nil =>
-      (1, Nil)
+      (1L, Nil)
     case l :: ls =>
       (cl_min_size(l), cl_min_size_and(ls)) match {
-        case ((-1, l1), (_, ls1)) => (-1, l1 :: ls1)
-        case ((_, l1), (-1, ls1)) => (-1, l1 :: ls1)
-        case ((i, l1), (j, ls1)) => (i + j, l1 :: ls1)
+        case ((i, l1), (j, ls1)) => (#+#(i, j), l1 :: ls1)
       }
+  }
+
+  def #+# : (Long, Long) => Long = {
+    case (Long.MaxValue, _) => Long.MaxValue
+    case (_, Long.MaxValue) => Long.MaxValue
+    case (i, j) => i + j
   }
 
   //

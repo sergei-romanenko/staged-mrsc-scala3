@@ -105,7 +105,7 @@ class GraphTests extends FunSuite {
   }
 
   test(testName = "graph size") {
-    assert(graph_size(g1) == 5)
+    assert(graph_size(g1) == 5L)
   }
 
   val l3: ILazyGraph =
@@ -130,6 +130,5 @@ class GraphTests extends FunSuite {
         List(Forth(3,
           List(Back(4))))))
   }
-
 
 }
