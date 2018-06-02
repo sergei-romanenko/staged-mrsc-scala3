@@ -181,13 +181,16 @@ object Graph {
   // We use a trick: ∞ is represented by Long.MaxValue in
   // (Long.MaxValue , Empty).
 
-  def cl_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) = {
+  def cl_min_size[C] (l : LazyGraph[C]): LazyGraph[C] =
+    sel_min_size(l)._2
+
+  def sel_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) = {
     case Empty =>
       (Long.MaxValue, Empty)
     case Stop(c) =>
       (1L, Stop(c))
     case Build(c, lss) =>
-      cl_min_size2(lss) match {
+      sel_min_size2(lss) match {
         case (Long.MaxValue, _) => (Long.MaxValue, Empty)
         case (k, ls) => (1L + k, Build(c, List(ls)))
       }
@@ -197,18 +200,18 @@ object Graph {
     if (kx1._1 <= kx2._1) kx1 else kx2
   }
 
-  def cl_min_size2[C]: List[List[LazyGraph[C]]] => (Long, List[LazyGraph[C]]) = {
+  def sel_min_size2[C]: List[List[LazyGraph[C]]] => (Long, List[LazyGraph[C]]) = {
     case Nil =>
       (Long.MaxValue, Nil)
     case ls :: lss =>
-      select_min2(cl_min_size_and(ls), cl_min_size2(lss))
+      select_min2(sel_min_size_and(ls), sel_min_size2(lss))
   }
 
-  def cl_min_size_and[C]: List[LazyGraph[C]] => (Long, List[LazyGraph[C]]) = {
+  def sel_min_size_and[C]: List[LazyGraph[C]] => (Long, List[LazyGraph[C]]) = {
     case Nil =>
       (1L, Nil)
     case l :: ls =>
-      (cl_min_size(l), cl_min_size_and(ls)) match {
+      (sel_min_size(l), sel_min_size_and(ls)) match {
         case ((i, l1), (j, ls1)) => (#+#(i, j), l1 :: ls1)
       }
   }

@@ -45,7 +45,7 @@ class BigStepScTests extends FunSuite {
   }
 
   test(testName = "min size cl") {
-    assert(unroll(cl_min_size(l1)._2) ==
+    assert(unroll(cl_min_size(l1)) ==
       List(Forth(0,List(Forth(1,List(Forth(2,List(Back(1)))))))))
   }
 

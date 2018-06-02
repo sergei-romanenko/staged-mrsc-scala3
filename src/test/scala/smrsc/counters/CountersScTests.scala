@@ -1,14 +1,10 @@
-package smrsc
+package smrsc.counters
 
 import org.scalatest.FunSuite
-
 import smrsc.Graph._
-import smrsc.counters._
+import smrsc._
 
-object CountersTestObj extends CountersSc with CountersWorld {
-
-  val maxN: Int = 3
-  override val maxDepth: Int = 10
+object TestProtocol extends CountersWorld {
 
   val start: C = List(2, 0)
   val rules: List[Rule] = List(
@@ -21,7 +17,7 @@ object CountersTestObj extends CountersSc with CountersWorld {
 
 class CountersScTests extends FunSuite {
 
-  import CountersTestObj._
+  import TestProtocol._
 
   val mg: Graph[C] =
     Forth(List(2, 0), List(
@@ -30,12 +26,14 @@ class CountersScTests extends FunSuite {
         Back(List(W, W))))))
 
   test(testName = "naive mrsc ~ lazy mrsc") {
+    val sc = CountersSc(TestProtocol, 3, 10)
+    import sc._
     val gs = naive_mrsc(start)
     //println(s"gs.length ==${gs.length}")
     val l = lazy_mrsc(start)
     assert(unroll(l) == gs)
     val ml = cl_min_size(l)
-    assert(unroll(ml._2).head == mg)
+    assert(unroll(ml).head == mg)
   }
 
 }

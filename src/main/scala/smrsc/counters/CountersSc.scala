@@ -1,14 +1,14 @@
 package smrsc.counters
 
+import smrsc.Util.cartesian
 import smrsc._
-import smrsc.Util._
 
-trait CountersSc extends BigStepSc {
+case class CountersSc(cnt: CountersWorld, maxN: Int, maxDepth: Int)
+  extends BigStepSc {
 
-  this: CountersWorld =>
+  import cnt._
 
-  val maxN: Int
-  val maxDepth: Int
+  type C = cnt.C
 
   private def isTooBig(c: C): Boolean =
     c.exists { case W => false case N(i) => i >= maxN }
@@ -17,7 +17,7 @@ trait CountersSc extends BigStepSc {
     h.exists(isTooBig)
 
   override def isFoldableTo(c1: C, c2: C): Boolean = {
-    (c1, c2).zipped.forall {case (nw1, nw2) => nw1 isIn nw2}
+    (c1, c2).zipped.forall { case (nw1, nw2) => nw1 isIn nw2 }
   }
 
   // Driving is deterministic
@@ -27,12 +27,12 @@ trait CountersSc extends BigStepSc {
   // Rebuilding is not deterministic,
   // but makes a single configuration from a configuration.
 
-  def rebuild1 : NW => List[NW] = {
+  def rebuild1: NW => List[NW] = {
     case W => List(W)
-    case N(i) => List(i, W)
+    case N(i) => List[NW](i, W)
   }
 
-  def rebuild(c: C) : List[C] = {
+  def rebuild(c: C): List[C] = {
     cartesian(c.map(rebuild1)).filterNot(_ == c)
   }
 

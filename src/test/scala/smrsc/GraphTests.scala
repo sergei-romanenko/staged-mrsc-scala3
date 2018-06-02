@@ -116,14 +116,14 @@ class GraphTests extends FunSuite {
         List(List(Stop(4)))))))
 
   test(testName = "min size cl") {
-    assert(cl_min_size(l3) == (5,
+    assert(cl_min_size(l3) ==
       Build(1, List(
         List(Build(3,
-          List(List(Stop(4)))))))))
+          List(List(Stop(4))))))))
   }
 
   test(testName = "min size cl unroll") {
-    val (k, min_l) = cl_min_size(l3)
+    val min_l = cl_min_size(l3)
     val min_g = unroll(min_l).head
     assert(min_g ==
       Forth(1,
