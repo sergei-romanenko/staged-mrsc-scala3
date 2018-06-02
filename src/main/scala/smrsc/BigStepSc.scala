@@ -55,7 +55,9 @@ import smrsc.Util._
 // * `isFoldableToHistory(c, h)` means that `c` is foldable to a configuration
 //   in the history `h`.
 
-trait ScWorld[C] {
+trait ScWorld {
+
+  type C
 
   type History = List[C]
 
@@ -69,7 +71,7 @@ trait ScWorld[C] {
     h.exists(isFoldableTo(c, _))
 }
 
-trait BigStepSc[C] extends ScWorld[C] {
+trait BigStepSc extends ScWorld {
 
   //Big-step multi-result supercompilation
   // (The naive version builds Cartesian products immediately.)
@@ -94,7 +96,7 @@ trait BigStepSc[C] extends ScWorld[C] {
   // with get-graphs being an "interpreter" that evaluates the "program"
   // returned by lazy_mrsc.
 
-  def lazy_mrsc_loop (h : History) (c : C) : LazyGraph[C] =
+  def lazy_mrsc_loop(h: History)(c: C): LazyGraph[C] =
     if (isFoldableToHistory(c, h))
       Stop(c)
     else if (isDangerous(h))
