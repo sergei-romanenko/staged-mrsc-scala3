@@ -39,6 +39,28 @@ case class Back[C](c: C) extends Graph[C]
 
 case class Forth[C](c: C, gs: List[Graph[C]]) extends Graph[C]
 
+// GraphPrettyPrinter
+
+object GraphPrettyPrinter {
+  def toString(tg: Graph[_]): String =
+    toString(tg, indent = "").toString
+
+  def toString(node: Graph[_], indent: String): StringBuilder = {
+    val sb = new StringBuilder()
+    node match {
+      case Back(c) =>
+        sb.append(indent + "|__" + c + "*")
+      case Forth(c, gs) =>
+        sb.append(indent + "|__" + c)
+        for (g <- gs) {
+          sb.append("\n  " + indent + "|")
+          sb.append("\n" + toString(g, indent + "  "))
+        }
+    }
+    sb
+  }
+}
+
 //
 // Lazy graphs of configuration
 //

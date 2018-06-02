@@ -27,8 +27,8 @@ object Synapse extends CountersWorld {
 
 object MSI extends CountersWorld {
 
-  val start =
-    List(W, N(0), N(0))
+  val start: C =
+    List(W, 0, 0)
 
   val rules: List[Rule] = List(
     {

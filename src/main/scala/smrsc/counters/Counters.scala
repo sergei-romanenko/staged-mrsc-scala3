@@ -52,7 +52,7 @@ case object W extends NW {
 
   def isIn(nw: NW): Boolean = W == nw
 
-  //override def toString = "ω"
+  override def toString = "ω"
 }
 
 trait CountersWorld {
@@ -66,5 +66,6 @@ trait CountersWorld {
   type Rule = PartialFunction[C, C]
   val start: C
   val rules: List[Rule]
-  val isUnsafe : C => Boolean
+  val isUnsafe: C => Boolean
+
 }
