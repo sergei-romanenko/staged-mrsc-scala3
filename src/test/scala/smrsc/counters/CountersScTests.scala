@@ -4,18 +4,18 @@ import org.scalatest.FunSuite
 import smrsc.Graph._
 import smrsc._
 
-object TestProtocol extends CountersWorld {
-
-  val start: C = List(2, 0)
-  val rules: List[Rule] = List(
-    { case List(i, j) if i >= 1 => List(i - 1, j + 1) },
-    { case List(i, j) if j >= 1 => List(i + 1, j - 1) }
-  )
-
-  val isUnsafe: C => Boolean = _ => false
-}
-
 class CountersScTests extends FunSuite {
+
+  object TestProtocol extends CountersWorld {
+
+    val start: C = List(2, 0)
+    val rules: List[Rule] = List(
+      { case List(i, j) if i >= 1 => List(i - 1, j + 1) },
+      { case List(i, j) if j >= 1 => List(i + 1, j - 1) }
+    )
+
+    val isUnsafe: C => Boolean = _ => false
+  }
 
   import TestProtocol._
 
