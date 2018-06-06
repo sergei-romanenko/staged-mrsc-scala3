@@ -17,7 +17,15 @@ class CountersScTests extends FunSuite {
     val isUnsafe: C => Boolean = _ => false
   }
 
+  object TestProtocolSc extends BigStepSc[List[NW]]
+    with CountersScWorld {
+    val cnt = TestProtocol
+    val maxN = 3
+    val maxDepth = 10
+  }
+
   import TestProtocol._
+  import TestProtocolSc._
 
   val mg: Graph[C] =
     Forth(List(2, 0), List(
@@ -26,8 +34,6 @@ class CountersScTests extends FunSuite {
         Back(List(W, W))))))
 
   test(testName = "naive mrsc ~ lazy mrsc") {
-    val sc = CountersSc(TestProtocol, 3, 10)
-    import sc._
     val gs = naive_mrsc(start)
     //println(s"gs.length ==${gs.length}")
     val l = lazy_mrsc(start)

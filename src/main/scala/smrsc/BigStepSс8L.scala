@@ -15,7 +15,9 @@ package smrsc
 // by the "lazy" (staged) version of multi-result
 // supercompilation.
 
-trait BigStepSс8L extends ScWorld {
+trait BigStepSс8L[C] {
+
+  this: ScWorld[C] =>
 
   // Lazy history
 

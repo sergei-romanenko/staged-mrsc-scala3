@@ -15,7 +15,9 @@ package smrsc
 // by the "lazy" (staged) version of multi-result
 // supercompilation.
 
-trait BigStepSс8 extends ScWorld {
+trait BigStepSс8[C] {
+
+  this: ScWorld[C] =>
 
   // build_cograph
 

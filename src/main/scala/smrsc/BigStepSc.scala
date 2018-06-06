@@ -55,9 +55,7 @@ import smrsc.Util._
 // * `isFoldableToHistory(c, h)` means that `c` is foldable to a configuration
 //   in the history `h`.
 
-trait ScWorld {
-
-  type C
+trait ScWorld[C] {
 
   type History = List[C]
 
@@ -71,7 +69,9 @@ trait ScWorld {
     h.exists(isFoldableTo(c, _))
 }
 
-trait BigStepSc extends ScWorld {
+trait BigStepSc[C] {
+
+  this: ScWorld[C] =>
 
   //Big-step multi-result supercompilation
   // (The naive version builds Cartesian products immediately.)
