@@ -2,9 +2,9 @@ package smrsc
 
 import org.scalatest.FunSuite
 
-class BigStepSc8Tests extends FunSuite {
+class BigStepSc8LTests extends FunSuite {
 
-  object TestSc8 extends BigStepSc with BigStepSс8 {
+  object TestSc8 extends BigStepSc with BigStepSс8L {
 
     type C = Int
 

@@ -82,6 +82,20 @@ case class Stop[C](c: C) extends LazyGraph[C]
 
 case class Build[C](c: C, lss: List[List[LazyGraph[C]]]) extends LazyGraph[C]
 
+// LazyCoraph
+
+sealed trait LazyCograph[+C]
+
+case object Empty8
+  extends LazyCograph[Nothing]
+
+case class Stop8[C](c: C)
+  extends LazyCograph[C]
+
+case class Build8[C](c: C, lss: () => List[List[LazyCograph[C]]])
+  extends LazyCograph[C]
+
+
 object Graph {
 
   // The semantics of a `LazyGraph a` is formally defined by

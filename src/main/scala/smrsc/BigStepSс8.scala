@@ -15,20 +15,6 @@ package smrsc
 // by the "lazy" (staged) version of multi-result
 // supercompilation.
 
-// LazyCoraph
-
-sealed trait LazyCograph[+C]
-
-case object Empty8
-  extends LazyCograph[Nothing]
-
-case class Stop8[C](c: C)
-  extends LazyCograph[C]
-
-case class Build8[C](c: C, lss: () => List[List[LazyCograph[C]]])
-  extends LazyCograph[C]
-
-
 trait BigStepSс8 extends ScWorld {
 
   // build_cograph
