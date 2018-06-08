@@ -2,6 +2,7 @@ package smrsc.counters
 
 import org.scalatest.FunSuite
 import smrsc.Graph._
+import smrsc.Statistics._
 import smrsc.GraphPrettyPrinter
 import smrsc.BigStepSс8
 
@@ -9,7 +10,7 @@ class Protocol8Tests extends FunSuite {
 
   def runMinSc(cw: CountersWorld, m: Int, d: Int): Unit = {
     val name = cw.getClass.getName.split("[\\.\\$]").last
-    println(s"\n$name")
+    print(s"\n$name ")
     val sc = new BigStepSс8[List[NW]] with CountersScWorld {
       val cnt: CountersWorld = cw
       val maxN: Int = m
@@ -18,6 +19,8 @@ class Protocol8Tests extends FunSuite {
     val l8 = sc.build_cograph(cw.start)
     val sl8 = sc.cl8_bad_conf(cw.isUnsafe)(l8)
     val sl = sc.prune(sl8)
+    val (len_usl, size_usl) = size_unroll(sl)
+    println(len_usl, size_usl)
     val ml = cl_min_size(sl)
     val mg = unroll(ml).head
     println(GraphPrettyPrinter.toString(mg))

@@ -2,13 +2,14 @@ package smrsc.counters
 
 import org.scalatest.FunSuite
 import smrsc.Graph._
+import smrsc.Statistics._
 import smrsc.{BigStepSc, GraphPrettyPrinter}
 
 class ProtocolTests extends FunSuite {
 
   def runMinSc(cw: CountersWorld, m: Int, d: Int): Unit = {
     val name = cw.getClass.getName.split("[\\.\\$]").last
-    println(s"\n$name")
+    print(s"\n$name ")
     val sc = new BigStepSc[List[NW]] with CountersScWorld {
       val cnt: CountersWorld = cw
       val maxN: Int = m
@@ -16,6 +17,8 @@ class ProtocolTests extends FunSuite {
     }
     val l = sc.lazy_mrsc(sc.cnt.start)
     val sl = cl_empty_and_bad(cw.isUnsafe)(l)
+    val (len_usl, size_usl) = size_unroll(sl)
+    println(len_usl, size_usl)
     val ml = cl_min_size(sl)
     val mg = unroll(ml).head
     println(GraphPrettyPrinter.toString(mg))
@@ -33,9 +36,9 @@ class ProtocolTests extends FunSuite {
     runMinSc(MOSI, m = 3, d = 10)
   }
 
-  //  test(testName = "ReaderWriter") {
-  //    runMinSc(ReaderWriter, maxN = 3, maxDepth = 10)
-  //  }
+  ignore(testName = "ReaderWriter") {
+    runMinSc(ReaderWriter, m = 3, d = 10)
+  }
 
   test(testName = "MESI") {
     runMinSc(MESI, m = 3, d = 10)

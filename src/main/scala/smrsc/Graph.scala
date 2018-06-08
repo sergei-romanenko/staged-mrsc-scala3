@@ -123,7 +123,7 @@ object Graph {
   //     select (unroll l)
   // generates the bag of "good" graphs.
   // Let us find a function `extract` such that
-  //     extract(l) = select(unroll(l))
+  //     extract(l) == select(unroll(l))
   // In many cases, `extract` may be more efficient (by several orders
   // of magnitude) than the composition `select . unroll`.
   // Sometimes, `extract` can be formulated in terms of "cleaners" of
@@ -131,9 +131,9 @@ object Graph {
   // such that
   //     unroll(clean(l)) ⊆ unroll(l)
   // Then `extract` can be constructed in the following way:
-  //     extract(l) = unroll(clean(l))
+  //     extract(l) == unroll(clean(l))
   // Theoretically speaking, `clean` is the result of "promoting" `select`:
-  //     (select compose unroll)(l) = (unroll compose clean)(l)
+  //     (select compose unroll)(l) == (unroll compose clean)(l)
   // The nice property of cleaners is that they are composable:
   // given `clean1` and `clean2`, `clean2 compose clean1` is also a cleaner.
 
@@ -261,8 +261,8 @@ object Graph {
   //
   // `cl_min_size` is sound:
   //
-  //  Let cl_min_size(l) = (k , l'). Then
+  //  Let cl_min_size(l) == (k , l'). Then
   //     unroll(l') ⊆ unroll(l)
-  //     k = graph_size (hd (unroll(l')))
+  //     k == graph_size (hd (unroll(l')))
 
 }
