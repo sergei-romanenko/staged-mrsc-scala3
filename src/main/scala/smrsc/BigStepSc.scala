@@ -1,7 +1,5 @@
 package smrsc
 
-import smrsc.Util._
-
 // ### Schemes of different types of big-step supercompilation
 
 // A variation of the scheme presented in the paper
@@ -19,7 +17,7 @@ import smrsc.Util._
 // supercompilation.
 //
 // The knowledge about the input language a supercompiler deals with
-// is represented by a "world of supercompilation", which is a record
+// is represented by a "world of supercompilation", which is a trait
 // that specifies the following.
 //
 // * `C` is the type of "configurations". Note that configurations are

@@ -1,7 +1,5 @@
 package smrsc
 
-import smrsc.Util._
-
 //
 // Graphs of configurations
 //

@@ -38,8 +38,8 @@ class Protocol8Tests extends FunSuite {
     runMinSc(MOSI, m = 3, d = 10)
   }
 
-  ignore(testName = "ReaderWriter") {
-    runMinSc(ReaderWriter, m = 3, d = 10)
+  test(testName = "ReaderWriter") {
+    runMinSc(ReaderWriter, m = 3, d = 5)
   }
 
   test(testName = "MESI") {
@@ -63,7 +63,7 @@ class Protocol8Tests extends FunSuite {
   }
 
   ignore(testName = "Futurebus") {
-    runMinSc(Futurebus, m = 3, d = 10)
+    runMinSc(Futurebus, m = 3, d = 8)
   }
 
   test(testName = "Xerox") {

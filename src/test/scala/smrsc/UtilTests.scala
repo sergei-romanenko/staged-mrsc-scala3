@@ -2,8 +2,6 @@ package smrsc
 
 import org.scalatest.FunSuite
 
-import smrsc.Util._
-
 class UtilTests extends FunSuite {
 
   def testCartesian(g: List[List[Int]], e: List[List[Int]]): Unit = {
