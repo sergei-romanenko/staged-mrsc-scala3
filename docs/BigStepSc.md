@@ -43,9 +43,9 @@ to a parent configuration (perhaps, to several ones).
 * Back-nodes are produced by folding a configuration to another
   configuration in the history.
 
-* Forth-nodes are produced by
+* Forth-nodes are produced either
 
-    + decomposing a configuration into a number of other configurations
+    + by decomposing a configuration into a number of other configurations
       (e.g. by driving or taking apart a let-expression), or
 
     + by rewriting a configuration by another one (e.g. by generalization,

@@ -2,7 +2,7 @@
 
 This is a Scala version of
 
-> <https://github.com/sergei-romanenko/staged-mrsc-agda>>
+> <https://github.com/sergei-romanenko/staged-mrsc-agda>
 
 Based on
 

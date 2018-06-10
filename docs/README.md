@@ -42,12 +42,11 @@ is an extended version of the preprint.
 ## TOC
 
 * [Is it possible to filter results that have not yet been produced?](FilteringBeforeProducing.md)
-* [A model of big-step multi-result supercompilation in Agda](BigStepSc.md).
+* [A model of big-step multi-result supercompilation](BigStepSc.md).
 * [Staging big-step multi-result supercompilation](StagedBigStepSc.md).
 * [Cleaning lazy graphs](CleaningLazyGraphs.md).
 * [Codata and corecursion: cleaning before whistling](CleaningBeforeWhistling.md).
 * [Counting without generation](CountingWithoutGeneration.md).
 * [An example: big-step supercompilation for counter systems](BigStepCounters.md).
 * [Conclusions and references](ConclusionsAndReferences.md).
-* Source code [in Agda](https://github.com/sergei-romanenko/staged-mrsc-agda).
-  (Usable with Agda 2.5.3 and stdlib 0.4.)
+* Source code [in Scala](https://github.com/sergei-romanenko/staged-mrsc-scala).
