@@ -17,13 +17,13 @@ object Statistics {
   //
   // Technically, we can define a function `length_unroll(c)` that analyses
   // lazy graphs such that
-  //   len_unroll(l) == unroll(l).length
+  //   length_unroll(l) == unroll(l).length
 
-  def len_unroll[C]: LazyGraph[C] => Long = {
+  def length_unroll[C]: LazyGraph[C] => Long = {
     case Empty => 0
     case Stop(c) => 1
     case Build(c, lss) =>
-      lss.map(_.map(len_unroll).foldLeft(1L)(_ * _)).sum
+      lss.map(_.map(length_unroll).foldLeft(1L)(_ * _)).sum
   }
 
   //

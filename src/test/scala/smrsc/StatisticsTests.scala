@@ -14,7 +14,7 @@ class StatisticsTests extends FunSuite {
   val ul1: List[Graph[C]] = unroll(l1)
 
   test(testName = "len_unroll") {
-    assert(len_unroll(l1) == ul1.length)
+    assert(length_unroll(l1) == ul1.length)
   }
 
   test(testName = "size_unroll") {
