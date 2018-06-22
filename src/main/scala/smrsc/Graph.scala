@@ -84,15 +84,37 @@ case class Build[C](c: C, lss: List[List[LazyGraph[C]]]) extends LazyGraph[C]
 
 sealed trait LazyCograph[+C]
 
-case object Empty8
-  extends LazyCograph[Nothing]
+object LazyCograph {
 
-case class Stop8[C](c: C)
-  extends LazyCograph[C]
+  case object Empty8
+    extends LazyCograph[Nothing]
 
-case class Build8[C](c: C, lss: () => List[List[LazyCograph[C]]])
-  extends LazyCograph[C]
+  private
+  class Stop8Imp[C](val c: C)
+    extends LazyCograph[C]
 
+  private
+  class Build8Imp[C](val c: C, val lss: () => List[List[LazyCograph[C]]])
+    extends LazyCograph[C]
+
+  object Stop8 {
+    def apply[C](c: C): LazyCograph[C] = new Stop8Imp(c)
+
+    def unapply[C](arg: Stop8Imp[C]): Option[C] =
+      Some(arg.c)
+  }
+
+  object Build8 {
+    def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] = {
+      lazy val lssVal = lss
+      new Build8Imp[C](c, () => lss)
+    }
+
+    def unapply[C](arg: Build8Imp[C]): Option[(C, List[List[LazyCograph[C]]])] =
+      Some(arg.c, arg.lss())
+  }
+
+}
 
 object Graph {
 
@@ -213,7 +235,7 @@ object Graph {
   // We use a trick: ∞ is represented by Long.MaxValue in
   // (Long.MaxValue , Empty).
 
-  def cl_min_size[C] (l : LazyGraph[C]): LazyGraph[C] =
+  def cl_min_size[C](l: LazyGraph[C]): LazyGraph[C] =
     sel_min_size(l)._2
 
   def sel_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) = {

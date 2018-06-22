@@ -1,5 +1,7 @@
 package smrsc
 
+import smrsc.LazyCograph._
+
 //
 // Infinite trees/graphs
 //
@@ -32,7 +34,7 @@ trait BigStepSс8L[C] {
     def ::(c: C): LH = LH(c :: h)
   }
 
-    object LHNil extends LH(Nil) {}
+  object LHNil extends LH(Nil) {}
 
   // build_cograph
 
@@ -40,7 +42,7 @@ trait BigStepSс8L[C] {
     if (w.foldable(c))
       Stop8(c)
     else
-      Build8(c, () =>
+      Build8(c,
         develop(c)
           .map(_.map(build_cograph_loop(c :: w))))
 
@@ -57,7 +59,7 @@ trait BigStepSс8L[C] {
         Empty
       else
         Build(c,
-          lss().map(_.map(prune_cograph_loop(c :: w))))
+          lss.map(_.map(prune_cograph_loop(c :: w))))
   }
 
   def prune_cograph(l: LazyCograph[C]): LazyGraph[C] =
@@ -91,8 +93,8 @@ trait BigStepSс8L[C] {
         Stop8(c)
     case Build8(c, lss) =>
       if (bad(c)) Empty8 else
-        Build8(c, () =>
-          lss().map(_.map(cl8_bad_conf(bad))))
+        Build8(c,
+          lss.map(_.map(cl8_bad_conf(bad))))
   }
 
   //
@@ -110,8 +112,8 @@ trait BigStepSс8L[C] {
     case Stop8(c) =>
       Stop8(c)
     case Build8(c, lss) =>
-      Build8(c, () =>
-        lss()
+      Build8(c,
+        lss
           .filterNot(_.contains(Empty8))
           .map(_.map(cl8_empty)))
   }
@@ -128,7 +130,7 @@ trait BigStepSс8L[C] {
         Empty
       else
         Build(c,
-          lss()
+          lss
             .filterNot(_.contains(Empty8))
             .map(_.map(prune_loop(c :: w))))
   }

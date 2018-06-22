@@ -61,7 +61,7 @@ trait CountersWorld {
 
   import scala.language.implicitConversions
 
-  implicit def int2NOmega(i: Int): NW = N(i)
+  implicit def int2NW(i: Int): NW = N(i)
 
   type C = List[NW]
 
