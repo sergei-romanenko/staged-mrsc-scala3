@@ -40,12 +40,9 @@ case class Forth[C](c: C, gs: List[Graph[C]]) extends Graph[C]
 // GraphPrettyPrinter
 
 object GraphPrettyPrinter {
-  def toString(tg: Graph[_]): String =
-    toString(tg, indent = "").toString
-
-  def toString(node: Graph[_], indent: String): StringBuilder = {
+  def toString(g: Graph[_], indent: String = ""): StringBuilder = {
     val sb = new StringBuilder()
-    node match {
+    g match {
       case Back(c) =>
         sb.append(indent + "|__" + c + "*")
       case Forth(c, gs) =>
@@ -60,7 +57,7 @@ object GraphPrettyPrinter {
 }
 
 //
-// Lazy graphs of configuration
+// Lazy graphs of configurations
 //
 
 // A `LazyGraph a` represents a finite set of graphs
@@ -254,21 +251,18 @@ object Graph {
     if (kx1._1 <= kx2._1) kx1 else kx2
   }
 
-  def sel_min_size2[C]: List[List[LazyGraph[C]]] => (Long, List[LazyGraph[C]]) = {
-    case Nil =>
-      (Long.MaxValue, Nil)
-    case ls :: lss =>
-      select_min2(sel_min_size_and(ls), sel_min_size2(lss))
-  }
+  def sel_min_size2[C](lss: List[List[LazyGraph[C]]]): (Long, List[LazyGraph[C]]) =
+    lss.foldRight[(Long, List[LazyGraph[C]])](Long.MaxValue, Nil) {
+      case (ls, acc) => select_min2(sel_min_size_and(ls), acc)
+    }
 
-  def sel_min_size_and[C]: List[LazyGraph[C]] => (Long, List[LazyGraph[C]]) = {
-    case Nil =>
-      (1L, Nil)
-    case l :: ls =>
-      (sel_min_size(l), sel_min_size_and(ls)) match {
-        case ((i, l1), (j, ls1)) => (#+#(i, j), l1 :: ls1)
-      }
-  }
+  def sel_min_size_and[C](ls: List[LazyGraph[C]]): (Long, List[LazyGraph[C]]) =
+    ls.foldRight[(Long, List[LazyGraph[C]])]((0L, Nil)) {
+      case (l, acc) =>
+        val (i, l1) = sel_min_size(l)
+        val (j, ls1) = acc
+        (#+#(i, j), l1 :: ls1)
+    }
 
   def #+# : (Long, Long) => Long = {
     case (Long.MaxValue, _) => Long.MaxValue
