@@ -21,6 +21,7 @@ expressions `e` by turning them into functions `() => e`.
 A `LazyCograph[C]` represents a (potentially) infinite set of
 graphs of configurations whose type is `Graph[C\` (see `Graph.scala`). 
 
+A "naive" definition of `LazyCograph[C]` looks as follows: 
 
 ```scala
 sealed trait LazyCograph[+C]
@@ -38,6 +39,31 @@ where `8` is used instead of `∞` in identifiers.
 Note that `LazyCograph[C]` differs from `LazyGraph[C]` in that the evaluation
 of `lss` in build-nodes is delayed.
 
+A drawback of such a definition is that the argument `lss` of `Build8`
+has to be delayed and forced explicitly. In addition, when forced, `lss` can be
+evaluated several times. Thus, the actual implementation of `Build8` is
+the following:
+```scala
+  private
+  class Build8Imp[C](val c: C, val lss: () => List[List[LazyCograph[C]]])
+    extends LazyCograph[C]
+
+  object Build8 {
+    def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] = {
+      lazy val lssVal = lss
+      new Build8Imp[C](c, () => lssVal)
+    }
+
+    def unapply[C](arg: Build8Imp[C]): Option[(C, List[List[LazyCograph[C]]])] =
+      Some(arg.c, arg.lss())
+  }
+```
+
+The point is that now `Build8.apply` is a function, whose second argument
+is passed by name, while `Build8.unapply` forces the second argument during
+pattern matching. Besides, the result of evaluating `lss` is memoized
+in `lssVal`. 
+
 ## Building lazy cographs
 
 Lazy cographs are produced by the function `build_cograph`
@@ -47,7 +73,7 @@ Lazy cographs are produced by the function `build_cograph`
     if (isFoldableToHistory(c, h))
       Stop8(c)
     else
-      Build8(c, () =>
+      Build8(c,
         develop(c)
           .map(_.map(build_cograph_loop(c :: h))))
 
@@ -72,7 +98,7 @@ to obtain a finite lazy graph.
         Empty
       else
         Build(c,
-          lss().map(_.map(prune_cograph_loop(c :: h))))
+          lss.map(_.map(prune_cograph_loop(c :: h))))
   }
 
   def prune_cograph(l: LazyCograph[C]): LazyGraph[C] =
@@ -105,7 +131,7 @@ Suppose `clean∞` is a cograph cleaner such that
 
 then 
 
-```agda
+```text
     clean ∘ lazy_mrsc ≗
         clean ∘ prune_cograph ∘ build_cograph ≗
         prune_cograph ∘ clean∞ ∘ build_cograph
@@ -137,8 +163,8 @@ configurations, returning a lazy subgraph (which can be infinite):
         Stop8(c)
     case Build8(c, lss) =>
       if (bad(c)) Empty8 else
-        Build8(c, () =>
-          lss().map(_.map(cl8_bad_conf(bad))))
+        Build8(c,
+          lss.map(_.map(cl8_bad_conf(bad))))
   }
 ```
 
