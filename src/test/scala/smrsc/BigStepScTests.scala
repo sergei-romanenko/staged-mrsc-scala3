@@ -1,9 +1,9 @@
 package smrsc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 
-class BigStepScTests extends FunSuite {
+class BigStepScTests extends AnyFunSuite {
 
   object TestSc extends BigStepSc[Int] with TestScWorld {}
 

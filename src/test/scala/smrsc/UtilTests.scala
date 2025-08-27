@@ -1,8 +1,8 @@
 package smrsc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class UtilTests extends FunSuite {
+class UtilTests extends AnyFunSuite {
 
   def testCartesian(g: List[List[Int]], e: List[List[Int]]): Unit = {
     val actual = cartesian(g)

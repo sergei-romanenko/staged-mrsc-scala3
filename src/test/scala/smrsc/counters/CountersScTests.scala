@@ -1,10 +1,10 @@
 package smrsc.counters
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 import smrsc._
 
-class CountersScTests extends FunSuite {
+class CountersScTests extends AnyFunSuite {
 
   object TestProtocol extends CountersWorld {
 

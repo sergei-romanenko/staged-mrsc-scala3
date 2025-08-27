@@ -1,9 +1,9 @@
 package smrsc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 
-class GraphTests extends FunSuite {
+class GraphTests extends AnyFunSuite {
 
   type IGraph = Graph[Int]
   type ILazyGraph = LazyGraph[Int]

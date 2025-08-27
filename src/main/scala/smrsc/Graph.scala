@@ -115,7 +115,7 @@ object Graph {
     case Empty => Nil
     case Stop(c) => List(Back(c))
     case Build(c, lss) =>
-      lss.flatMap(ls => cartesian(ls.map(unroll))).map(Forth(c, _))
+      lss.flatMap(ls => cartesian(ls.map(unroll[C]))).map(Forth(c, _))
   }
 
   // Usually, we are not interested in the whole bag `unroll(l)`.

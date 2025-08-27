@@ -1,8 +1,8 @@
 package smrsc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class BigStepSc8Tests extends FunSuite {
+class BigStepSc8Tests extends AnyFunSuite {
 
   object TestSc8 extends BigStepSc[Int]
     with BigStepSс8[Int] with TestScWorld {}

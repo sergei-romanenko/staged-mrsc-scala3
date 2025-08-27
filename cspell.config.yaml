@@ -1,0 +1,20 @@
+version: "0.2"
+ignorePaths: []
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - cograph
+  - cographs
+  - Coraph
+  - Futurebus
+  - MESI
+  - MOESI
+  - MOSI
+  - mrsc
+  - scalac
+  - scalactic
+  - scalatest
+  - smrsc
+  - supercompilation
+ignoreWords: []
+import: []

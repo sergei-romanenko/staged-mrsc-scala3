@@ -1,12 +1,12 @@
 package smrsc.counters
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 import smrsc.Statistics._
 import smrsc.GraphPrettyPrinter
 import smrsc.BigStepSс8
 
-class Protocol8Tests extends FunSuite {
+class Protocol8Tests extends AnyFunSuite {
 
   def runMinSc(cw: CountersWorld, m: Int, d: Int): Unit = {
     val name = cw.getClass.getName.split("[\\.\\$]").last
@@ -20,7 +20,7 @@ class Protocol8Tests extends FunSuite {
     val sl8 = sc.cl8_bad_conf(cw.isUnsafe)(l8)
     val sl = sc.prune(sl8)
     val (len_usl, size_usl) = size_unroll(sl)
-    println(len_usl, size_usl)
+    println(s"${len_usl} ${size_usl}")
     val ml = cl_min_size(sl)
     val mg = unroll(ml).head
     println(GraphPrettyPrinter.toString(mg))
