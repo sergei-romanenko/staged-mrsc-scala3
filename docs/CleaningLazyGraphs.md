@@ -87,6 +87,7 @@ represent empty sets of graphs.
 ```text
   unroll(cl_empty(l)) == unroll(l)
 ```
+
 There exists a proof of this theorem formalized in Agda.
 
 ## Cleaner `cl_min_size`
@@ -102,9 +103,11 @@ The size of a graph is calculated by the function `graph-size`:
 ```
 
 The function `sel_min_size`
+
 ```scala
   def sel_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C])
 ```
+
 takes as input a lazy graph`l` and returns either `(0L , Empty)`,
 if `unroll(l)` contains no graphs, or a pair `(k , l1)`,
 where `l1` is a lazy graph, representing a single graph `g1`
@@ -130,10 +133,12 @@ A good thing about `sel_min_size` is that it cleans any lazy graph `l`
 in linear time with respect to the size of `l`.
 
 Having defined `sel_min_size`, we can define the function `cl_min_size`
+
 ```scala
   def cl_min_size[C] (l : LazyGraph[C]): LazyGraph[C] =
     sel_min_size(l)._2
 ```
+
 that takes as input a lazy graph`l` and returns either `Empty`,
 if `unroll(l)` is `Nil`, or a lazy graph `l1`, representing a single
 graph `g1` of minimal size.

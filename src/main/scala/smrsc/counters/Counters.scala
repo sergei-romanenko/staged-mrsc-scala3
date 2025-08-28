@@ -87,7 +87,7 @@ trait CountersScWorld extends ScWorld[List[NW]] {
     h.exists(isTooBig) || h.length >= maxDepth
 
   override def isFoldableTo(c1: C, c2: C): Boolean = {
-    (c1, c2).zipped.forall { case (nw1, nw2) => nw1 isIn nw2 }
+    c1.lazyZip(c2).forall { case (nw1, nw2) => nw1 isIn nw2 }
   }
 
   // Driving is deterministic

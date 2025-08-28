@@ -44,6 +44,7 @@ object MSI extends CountersWorld {
 
   val isUnsafe: C => Boolean = {
     case List(i, m, s) => (m >= 1 && s >= 1) || (m >= 2)
+    case _ => false
   }
 }
 

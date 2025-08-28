@@ -52,6 +52,7 @@ trait CountersWorld {
   val isUnsafe: C => Boolean
 }
 ```
+
 where
 
 * `C` is the type of configurations.
@@ -64,13 +65,13 @@ where
 
 A rule `r` is a partial function that, if it is applicable to a configuration
 `c`, returns a new configuration `r(c)`.
- 
+
 In Scala, `r.lift` is a function that returns `Some(r(c))`, if `r` is
 applicable to `c`, or `None` otherwise. Hence, the result of driving
 a configuration`c` is produced by the expression `rules.flatMap(_.lift(c))`.
 Namely, if `r.lift(c)` returns `None`, `flatMap` just throws this `None` away,
 but if `r.lift(c)` returns `Some(c1)`, `flatMap` turns `Some(c1)` into `c1`.
-Hence, each applicable rule produces a new configuration. 
+Hence, each applicable rule produces a new configuration.
 
 Then there is defined the trait `CountersScWorld`
 
@@ -123,6 +124,7 @@ The protocol is specified by the object `TestProtocol`:
 
 And then, the corresponding supercompiler is declared as the object
 `TestProtocolSc`:
+
 ```scala
   object TestProtocolSc extends BigStepSc[List[NW]]
     with CountersScWorld {
@@ -135,6 +137,7 @@ And then, the corresponding supercompiler is declared as the object
 Now we can write a test that calls `naive_mrsc` to produce a list of
 graphs `gs`, and `lazy_mrsc` to produce a lazy graph. Then we check that
 `unroll(l) == gs`.
+
 ```scala
   test(testName = "naive mrsc ~ lazy mrsc") {
     val gs = naive_mrsc(start)

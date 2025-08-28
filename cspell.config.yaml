@@ -3,18 +3,54 @@ ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - Agda
+  - Ailamazyan
+  - brgr
+  - codata
   - cograph
   - cographs
   - Coraph
+  - corecursion
+  - Dimitur
   - Futurebus
+  - Grechanik
+  - HOSC
+  - Ilya
+  - Irina
+  - Keldysh
+  - Klimov
+  - Klyu
+  - Klyuchnikov
+  - Krustev
   - MESI
+  - Metacomputation
+  - metasystem
   - MOESI
   - MOSI
   - mrsc
+  - Nemytykh
+  - Overgraph
+  - overtrees
+  - ovgr
+  - Pereslavl
+  - Peyton
+  - println
+  - Romanenko
   - scalac
   - scalactic
   - scalatest
+  - scev
+  - scfr
+  - scver
   - smrsc
   - supercompilation
+  - supercompiler
+  - supercompilers
+  - Turchin
+  - unapply
+  - Verlag
+  - Virbitskaite
+  - Voronkov
+  - Zalessky
 ignoreWords: []
 import: []

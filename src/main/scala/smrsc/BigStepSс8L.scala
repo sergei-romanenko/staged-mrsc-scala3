@@ -66,7 +66,7 @@ trait BigStepSс8L[C] {
     prune_cograph_loop(LHNil)(l)
 
   //
-  // Now that we have docomposed `lazy_mrsc`
+  // Now that we have decomposed `lazy_mrsc`
   //     lazy_mrsc ≗ prune_cograph ∘ build_cograph
   // we can push some cleaners into prune_cograph.
   //

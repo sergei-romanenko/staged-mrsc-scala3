@@ -1,6 +1,6 @@
 # Staged Multi-result Supercompilation: Filtering by Transformation
 
-This is a Scala version of
+This is a Scala 3 version of
 
 > <https://github.com/sergei-romanenko/staged-mrsc-agda>
 

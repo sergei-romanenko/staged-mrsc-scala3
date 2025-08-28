@@ -89,17 +89,16 @@ object LazyCograph {
   case class Stop8[C](c: C)
     extends LazyCograph[C]
 
-  private
-  class Build8Imp[C](val c: C, val lss: () => List[List[LazyCograph[C]]])
+  case class Build8[C] private (val c: C, val lss: () => List[List[LazyCograph[C]]])
     extends LazyCograph[C]
 
   object Build8 {
     def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] = {
       lazy val lssVal = lss
-      new Build8Imp[C](c, () => lssVal)
+      Build8[C](c, () => lssVal)
     }
 
-    def unapply[C](arg: Build8Imp[C]): Option[(C, List[List[LazyCograph[C]]])] =
+    def unapply[C](arg: Build8[C]): Some[(C, List[List[LazyCograph[C]]])] =
       Some(arg.c, arg.lss())
   }
 

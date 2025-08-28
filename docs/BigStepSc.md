@@ -6,7 +6,8 @@ runnable supercompilers.
 
 Given an initial configuration `c`, a supercompiler produces a list of
 "residual" graphs of configurations:
-```
+
+```text
     g[1], ... , g[k]
 ```
 
@@ -45,18 +46,19 @@ to a parent configuration (perhaps, to several ones).
 
 * Forth-nodes are produced either
 
-    + by decomposing a configuration into a number of other configurations
-      (e.g. by driving or taking apart a let-expression), or
+  * by decomposing a configuration into a number of other configurations
+    (e.g. by driving or taking apart a let-expression), or
 
-    + by rewriting a configuration by another one (e.g. by generalization,
-      introducing a let-expression or applying a lemma during
-      two-level supercompilation).
+  * by rewriting a configuration by another one (e.g. by generalization,
+    introducing a let-expression or applying a lemma during
+    two-level supercompilation).
 
 ## "Worlds" of supercompilation
 
 The knowledge about the input language a supercompiler deals with
 is represented by a "world of supercompilation", which extends the
 following trait
+
 ```scala
 trait ScWorld[C] {
 
@@ -72,6 +74,7 @@ trait ScWorld[C] {
     h.exists(isFoldableTo(c, _))
 }
 ```
+
 in which
 
 * `C` is the type of "configurations". Note that configurations are
@@ -114,7 +117,6 @@ concrete members.
 * `isFoldableToHistory(c, h)` means that `c` is foldable to a configuration in
   the history `h`.
 
-
 ## Graphs with labeled edges
 
 If we need labeled edges in the graph of configurations, the labels can be
@@ -127,6 +129,7 @@ configurations can be declared as
 ```scala
 type C = (Expr, Option[Contraction])
 ```
+
 where `Expr` is an "expression" with free variables and `Contraction` is
 a test that has to be performed in order to reach this configuration.
 
@@ -237,4 +240,4 @@ The most trivial solution is to define `isDangerous` as
 ```scala
   override def isDangerous(h: History): Boolean =
     h.length >= maxDepth
-``` 
+```

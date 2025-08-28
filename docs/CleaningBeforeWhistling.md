@@ -19,9 +19,9 @@ expressions `e` by turning them into functions `() => e`.
 ## Lazy cographs of configurations
 
 A `LazyCograph[C]` represents a (potentially) infinite set of
-graphs of configurations whose type is `Graph[C\` (see `Graph.scala`). 
+graphs of configurations whose type is `Graph[C\` (see `Graph.scala`).
 
-A "naive" definition of `LazyCograph[C]` looks as follows: 
+A "naive" definition of `LazyCograph[C]` looks as follows:
 
 ```scala
 sealed trait LazyCograph[+C]
@@ -33,8 +33,8 @@ case class Stop8[C](c: C) extends LazyCograph[C]
 case class Build8[C](c: C, lss: () => List[List[LazyCograph[C]]])
   extends LazyCograph[C]
 ```
-where `8` is used instead of `∞` in identifiers. 
 
+where `8` is used instead of `∞` in identifiers.
 
 Note that `LazyCograph[C]` differs from `LazyGraph[C]` in that the evaluation
 of `lss` in build-nodes is delayed.
@@ -43,26 +43,26 @@ A drawback of such a definition is that the argument `lss` of `Build8`
 has to be delayed and forced explicitly. In addition, when forced, `lss` can be
 evaluated several times. Thus, the actual implementation of `Build8` is
 the following:
+
 ```scala
-  private
-  class Build8Imp[C](val c: C, val lss: () => List[List[LazyCograph[C]]])
+  case class Build8[C] private (val c: C, val lss: () => List[List[LazyCograph[C]]])
     extends LazyCograph[C]
 
   object Build8 {
     def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] = {
       lazy val lssVal = lss
-      new Build8Imp[C](c, () => lssVal)
+      Build8[C](c, () => lssVal)
     }
 
-    def unapply[C](arg: Build8Imp[C]): Option[(C, List[List[LazyCograph[C]]])] =
+    def unapply[C](arg: Build8[C]): Some[(C, List[List[LazyCograph[C]]])] =
       Some(arg.c, arg.lss())
-  }
+
 ```
 
 The point is that now `Build8.apply` is a function, whose second argument
 is passed by name, while `Build8.unapply` forces the second argument during
 pattern matching. Besides, the result of evaluating `lss` is memoized
-in `lssVal`. 
+in `lssVal`.
 
 ## Building lazy cographs
 
@@ -129,7 +129,7 @@ Suppose `clean∞` is a cograph cleaner such that
     clean ∘ prune_cograph ≗ prune_cograph ∘ clean∞
 ```
 
-then 
+then
 
 ```text
     clean ∘ lazy_mrsc ≗
@@ -151,10 +151,10 @@ is likely to be less time and space consuming than evaluating
 ```
 
 In `BigStepSc8.scala` there is defined a cograph cleaner `cl8_bad_conf`
-that takes a lazy cograph and prunes subrees containing bad
+that takes a lazy cograph and prunes subtrees containing bad
 configurations, returning a lazy subgraph (which can be infinite):
 
-```agda
+```scala
   def cl8_bad_conf(bad: C => Boolean): LazyCograph[C] => LazyCograph[C] = {
     case Empty8 =>
       Empty8
