@@ -6,16 +6,15 @@ import smrsc.Statistics._
 import smrsc.GraphPrettyPrinter
 import smrsc.BigStepSс8
 
-class Protocol8Tests extends AnyFunSuite {
+class Protocol8Tests extends AnyFunSuite:
 
-  def runMinSc(cw: CountersWorld, m: Int, d: Int): Unit = {
+  def runMinSc(cw: CountersWorld, m: Int, d: Int): Unit =
     val name = cw.getClass.getName.split("[\\.\\$]").last
     print(s"\n$name ")
-    val sc = new BigStepSс8[List[NW]] with CountersScWorld {
+    val sc = new BigStepSс8[List[NW]] with CountersScWorld:
       val cnt: CountersWorld = cw
       val maxN: Int = m
       val maxDepth: Int = d
-    }
     val l8 = sc.build_cograph(cw.start)
     val sl8 = sc.cl8_bad_conf(cw.isUnsafe)(l8)
     val sl = sc.prune(sl8)
@@ -24,7 +23,6 @@ class Protocol8Tests extends AnyFunSuite {
     val ml = cl_min_size(sl)
     val mg = unroll(ml).head
     println(GraphPrettyPrinter.toString(mg))
-  }
 
   test(testName = "Synapse") {
     runMinSc(Synapse, m = 3, d = 10)
@@ -74,4 +72,3 @@ class Protocol8Tests extends AnyFunSuite {
     runMinSc(DataRace, m = 3, d = 10)
   }
 
-}

@@ -1,6 +1,6 @@
 package smrsc
 
-trait TestScWorld extends ScWorld[Int] {
+trait TestScWorld extends ScWorld[Int]:
 
   type C = Int
 
@@ -14,8 +14,7 @@ trait TestScWorld extends ScWorld[Int] {
     drive(c) ::: rebuild(c)
 
   def drive(c: C): List[List[C]] =
-    if (c < 2) List() else List(List(0, c - 1), List(c - 1))
+    if c < 2 then List() else List(List(0, c - 1), List(c - 1))
 
   def rebuild(c: C): List[List[C]] =
     List(List(c + 1))
-}

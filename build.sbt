@@ -6,11 +6,10 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.19"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 
-// scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-source:3.0-migration", "-explain")
-scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-source:3.0-migration")
+scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
-testOptions in Test += Tests.Argument("-oD")
+Test / testOptions += Tests.Argument("-oD")
 
-logBuffered in Test := false
+Test / logBuffered := false
 
-parallelExecution in Test := false
+Test / parallelExecution := false

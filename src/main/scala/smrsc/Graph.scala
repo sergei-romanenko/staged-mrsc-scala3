@@ -39,22 +39,18 @@ case class Forth[C](c: C, gs: List[Graph[C]]) extends Graph[C]
 
 // GraphPrettyPrinter
 
-object GraphPrettyPrinter {
-  def toString(g: Graph[_], indent: String = ""): StringBuilder = {
+object GraphPrettyPrinter:
+  def toString(g: Graph[?], indent: String = ""): StringBuilder =
     val sb = new StringBuilder()
-    g match {
+    g match
       case Back(c) =>
         sb.append(indent + "|__" + c + "*")
       case Forth(c, gs) =>
         sb.append(indent + "|__" + c)
-        for (g <- gs) {
+        for g <- gs do
           sb.append("\n  " + indent + "|")
           sb.append("\n" + toString(g, indent + "  "))
-        }
-    }
     sb
-  }
-}
 
 //
 // Lazy graphs of configurations
@@ -81,7 +77,7 @@ case class Build[C](c: C, lss: List[List[LazyGraph[C]]]) extends LazyGraph[C]
 
 sealed trait LazyCograph[+C]
 
-object LazyCograph {
+object LazyCograph:
 
   case object Empty8
     extends LazyCograph[Nothing]
@@ -92,30 +88,26 @@ object LazyCograph {
   case class Build8[C] private (val c: C, val lss: () => List[List[LazyCograph[C]]])
     extends LazyCograph[C]
 
-  object Build8 {
-    def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] = {
+  object Build8:
+    def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] =
       lazy val lssVal = lss
       Build8[C](c, () => lssVal)
-    }
 
     def unapply[C](arg: Build8[C]): Some[(C, List[List[LazyCograph[C]]])] =
       Some(arg.c, arg.lss())
-  }
 
-}
 
-object Graph {
+object Graph:
 
   // The semantics of a `LazyGraph a` is formally defined by
   // the interpreter `unroll` that generates a list of `Graph a` from
   // the `LazyGraph a` by executing commands recorded in the `LazyGraph a`.
 
-  def unroll[C](l: LazyGraph[C]): List[Graph[C]] = l match {
+  def unroll[C](l: LazyGraph[C]): List[Graph[C]] = l match
     case Empty => Nil
     case Stop(c) => List(Back(c))
     case Build(c, lss) =>
       lss.flatMap(ls => cartesian(ls.map(unroll[C]))).map(Forth(c, _))
-  }
 
   // Usually, we are not interested in the whole bag `unroll(l)`.
   // The goal is to find "the best" or "most interesting" graphs.
@@ -152,11 +144,10 @@ object Graph {
   // Some of these states may be "bad" with respect to the problem
   // that is to be solved by means of supercompilation.
 
-  def bad_graph[C](bad: C => Boolean): Graph[C] => Boolean = {
+  def bad_graph[C](bad: C => Boolean): Graph[C] => Boolean =
     case Back(c) => bad(c)
     case Forth(c, gs) =>
       bad(c) || gs.exists(bad_graph(bad))
-  }
 
   // This filter removes the graphs containing "bad" configurations.
 
@@ -169,22 +160,20 @@ object Graph {
 
   // `cl_empty` removes subtrees that represent empty sets of graphs.
 
-  def cl_empty[C]: LazyGraph[C] => LazyGraph[C] = {
+  def cl_empty[C]: LazyGraph[C] => LazyGraph[C] =
     case Empty => Empty
     case Stop(c) => Stop(c)
     case Build(c, lss) => cl_empty_build(c, cl_empty2(lss))
-  }
 
   def cl_empty_build[C](c: C, lss: List[List[LazyGraph[C]]]): LazyGraph[C] =
-    if (lss.isEmpty) Empty else Build(c, lss)
+    if lss.isEmpty then Empty else Build(c, lss)
 
   def cl_empty2[C](lss: List[List[LazyGraph[C]]]): List[List[LazyGraph[C]]] =
     lss.map(cl_empty1).collect { case Some(ls1) => ls1 }
 
-  def cl_empty1[C](ls: List[LazyGraph[C]]): Option[List[LazyGraph[C]]] = {
+  def cl_empty1[C](ls: List[LazyGraph[C]]): Option[List[LazyGraph[C]]] =
     val ls1 = ls.map(cl_empty)
-    if (ls1.contains(Empty)) None else Some(ls1)
-  }
+    if ls1.contains(Empty) then None else Some(ls1)
 
   // Removing graphs that contain "bad" configurations.
   // The cleaner `cl_bad_conf` corresponds to the filter `fl_bad_conf`.
@@ -192,13 +181,12 @@ object Graph {
   // in the sense that a single "bad" configuration spoils the whole
   // graph.
 
-  def cl_bad_conf[C](bad: C => Boolean): LazyGraph[C] => LazyGraph[C] = {
+  def cl_bad_conf[C](bad: C => Boolean): LazyGraph[C] => LazyGraph[C] =
     case Empty => Empty
     case Stop(c) =>
-      if (bad(c)) Empty else Stop(c)
+      if bad(c) then Empty else Stop(c)
     case Build(c, lss) =>
-      if (bad(c)) Empty else Build(c, lss.map(_.map(cl_bad_conf(bad))))
-  }
+      if bad(c) then Empty else Build(c, lss.map(_.map(cl_bad_conf(bad))))
 
   //
   // The graph returned by `cl_bad_conf` may be cleaned by `cl_empty`.
@@ -211,11 +199,10 @@ object Graph {
   // Extracting a graph of minimal size (if any).
   //
 
-  def graph_size[C]: Graph[C] => Long = {
+  def graph_size[C]: Graph[C] => Long =
     case Back(_) => 1L
     case Forth(_, gs) =>
       1L + gs.map(graph_size).sum
-  }
 
   // Now we define a cleaner `cl_min_size` that produces a lazy graph
   // representing the smallest graph (or the empty set of graphs).
@@ -226,21 +213,18 @@ object Graph {
   def cl_min_size[C](l: LazyGraph[C]): LazyGraph[C] =
     sel_min_size(l)._2
 
-  def sel_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) = {
+  def sel_min_size[C]: LazyGraph[C] => (Long, LazyGraph[C]) =
     case Empty =>
       (Long.MaxValue, Empty)
     case Stop(c) =>
       (1L, Stop(c))
     case Build(c, lss) =>
-      sel_min_size2(lss) match {
+      sel_min_size2(lss) match
         case (Long.MaxValue, _) => (Long.MaxValue, Empty)
         case (k, ls) => (1L + k, Build(c, List(ls)))
-      }
-  }
 
-  def select_min2[C](kx1: (Long, C), kx2: (Long, C)): (Long, C) = {
-    if (kx1._1 <= kx2._1) kx1 else kx2
-  }
+  def select_min2[C](kx1: (Long, C), kx2: (Long, C)): (Long, C) =
+    if kx1._1 <= kx2._1 then kx1 else kx2
 
   def sel_min_size2[C](lss: List[List[LazyGraph[C]]]): (Long, List[LazyGraph[C]]) =
     lss.foldRight[(Long, List[LazyGraph[C]])](Long.MaxValue, Nil) {
@@ -255,11 +239,10 @@ object Graph {
         (#+#(i, j), l1 :: ls1)
     }
 
-  def #+# : (Long, Long) => Long = {
+  def #+# : (Long, Long) => Long =
     case (Long.MaxValue, _) => Long.MaxValue
     case (_, Long.MaxValue) => Long.MaxValue
     case (i, j) => i + j
-  }
 
   //
   // `cl_min_size` is sound:
@@ -268,4 +251,3 @@ object Graph {
   //     unroll(l') ⊆ unroll(l)
   //     k == graph_size (hd (unroll(l')))
 
-}

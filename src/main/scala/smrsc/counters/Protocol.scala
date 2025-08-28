@@ -1,6 +1,6 @@
 package smrsc.counters
 
-object Synapse extends CountersWorld {
+object Synapse extends CountersWorld:
 
   val start: C =
     List(W, 0, 0)
@@ -18,14 +18,12 @@ object Synapse extends CountersWorld {
     }
   )
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, d, v) if d >= 1 && v >= 1 => true
     case List(i, d, v) if d >= 2 => true
     case _ => false
-  }
-}
 
-object MSI extends CountersWorld {
+object MSI extends CountersWorld:
 
   val start: C =
     List(W, 0, 0)
@@ -42,13 +40,11 @@ object MSI extends CountersWorld {
         List(i - 1, 0, m + s + 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, m, s) => (m >= 1 && s >= 1) || (m >= 2)
     case _ => false
-  }
-}
 
-object MOSI extends CountersWorld {
+object MOSI extends CountersWorld:
 
   val start: C =
     List(W, 0, 0, 0)
@@ -77,15 +73,13 @@ object MOSI extends CountersWorld {
         List(i + 1, o - 1, s, m)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, o, s, m) if o >= 2 => true
     case List(i, o, s, m) if m >= 2 => true
     case List(i, o, s, m) if s >= 1 && m >= 1 => true
     case _ => false
-  }
-}
 
-object ReaderWriter extends CountersWorld {
+object ReaderWriter extends CountersWorld:
 
   val start: C =
     List(1, 0, 0, W, 0, 0)
@@ -111,13 +105,11 @@ object ReaderWriter extends CountersWorld {
         List(x2, x3, x4, x5 - 1, x6, x7 + 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(x2, x3, x4, x5, x6, x7) if x3 >= 1 && x4 >= 1 => true
     case _ => false
-  }
-}
 
-object MESI extends CountersWorld {
+object MESI extends CountersWorld:
 
   val start: C =
     List(W, 0, 0, 0)
@@ -137,14 +129,12 @@ object MESI extends CountersWorld {
         List(i + e + s + m - 1, 1, 0, 0)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, e, s, m) if m >= 2 => true
     case List(i, e, s, m) if s >= 1 && m >= 1 => true
     case _ => false
-  }
-}
 
-object MOESI extends CountersWorld {
+object MOESI extends CountersWorld:
 
   val start: C = List(W, 0, 0, 0, 0)
 
@@ -163,15 +153,13 @@ object MOESI extends CountersWorld {
         List(i + m + s + e + o - 1, 0, 0, 1, 0)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, m, s, e, o) if m >= 1 && (e + s + o) >= 1 => true
     case List(i, m, s, e, o) if m >= 2 => true
     case List(i, m, s, e, o) if e >= 2 => true
     case _ => false
-  }
-}
 
-object Illinois extends CountersWorld {
+object Illinois extends CountersWorld:
 
   val start: C =
     List(W, 0, 0, 0)
@@ -206,14 +194,12 @@ object Illinois extends CountersWorld {
         List(i + 1, e - 1, d, s)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, e, d, s) if d >= 1 && s >= 1 => true
     case List(i, e, d, s) if d >= 2 => true
     case _ => false
-  }
-}
 
-object Berkley extends CountersWorld {
+object Berkley extends CountersWorld:
 
   val start: C =
     List(W, 0, 0, 0)
@@ -230,14 +216,12 @@ object Berkley extends CountersWorld {
         List(i + n + u - 1, 0, 0, e + 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, n, u, e) if e >= 1 && u + n >= 1 => true
     case List(i, n, u, e) if e >= 2 => true
     case _ => false
-  }
-}
 
-case object Firefly extends CountersWorld {
+case object Firefly extends CountersWorld:
 
   val start: C =
     List(W, 0, 0, 0)
@@ -263,15 +247,13 @@ case object Firefly extends CountersWorld {
         List(i + e + d + s - 1, 0, 0, 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, e, s, d) if d >= 1 && s + e >= 1 => true
     case List(i, e, s, d) if e >= 2 => true
     case List(i, e, s, d) if d >= 2 => true
     case _ => false
-  }
-}
 
-object Futurebus extends CountersWorld {
+object Futurebus extends CountersWorld:
 
   val start: C = List(W, 0, 0, 0, 0, 0, 0, 0, 0)
 
@@ -308,16 +290,14 @@ object Futurebus extends CountersWorld {
         List(i + sU - 1, 0, eU, eM + 1, pR, pW, pEMR, pEMW, pSU)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, sU, eU, eM, pR, pW, pEMR, pEMW, pSU) if sU >= 1 && eU + eM >= 1 => true
     case List(i, sU, eU, eM, pR, pW, pEMR, pEMW, pSU) if eU + eM >= 2 => true
     case List(i, sU, eU, eM, pR, pW, pEMR, pEMW, pSU) if pR >= 1 && pW >= 1 => true
     case List(i, sU, eU, eM, pR, pW, pEMR, pEMW, pSU) if pW >= 2 => true
     case _ => false
-  }
-}
 
-object Xerox extends CountersWorld {
+object Xerox extends CountersWorld:
   val start: C =
     List(W, 0, 0, 0, 0)
 
@@ -348,16 +328,14 @@ object Xerox extends CountersWorld {
         List(i + 1, sc, sd, d, e - 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(i, sc, sd, d, e) if d >= 1 && (e + sc + sd) >= 1 => true
     case List(i, sc, sd, d, e) if e >= 1 && (sc + sd) >= 1 => true
     case List(i, sc, sd, d, e) if d >= 2 => true
     case List(i, sc, sd, d, e) if e >= 2 => true
     case _ => false
-  }
-}
 
-object DataRace extends CountersWorld {
+object DataRace extends CountersWorld:
 
   val start: C =
     List(W, 0, 0)
@@ -377,8 +355,6 @@ object DataRace extends CountersWorld {
         List(out + 1, cs, scs - 1)
     })
 
-  val isUnsafe: C => Boolean = {
+  val isUnsafe: C => Boolean =
     case List(out, cs, scs) if cs >= 1 && scs >= 1 => true
     case _ => false
-  }
-}

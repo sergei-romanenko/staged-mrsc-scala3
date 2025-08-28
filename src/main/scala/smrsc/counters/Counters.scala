@@ -2,7 +2,7 @@ package smrsc.counters
 
 import smrsc.{cartesian, ScWorld}
 
-sealed trait NW {
+sealed trait NW:
   def +(comp: NW): NW
 
   def -(comp: NW): NW
@@ -12,20 +12,17 @@ sealed trait NW {
   def ===(i: Int): Boolean
 
   def isIn(nw: NW): Boolean
-}
 
-case class N(i: Int) extends NW {
+case class N(i: Int) extends NW:
   def +(nw: NW): NW =
-    nw match {
+    nw match
       case W => W
       case N(j) => N(i + j)
-    }
 
   def -(nw: NW): NW =
-    nw match {
+    nw match
       case W => W
       case N(j) => N(i - j)
-    }
 
   def >=(j: Int): Boolean =
     i >= j
@@ -34,16 +31,14 @@ case class N(i: Int) extends NW {
     i == j
 
   def isIn(nw: NW): Boolean =
-    nw match {
+    nw match
       case W => true
       case N(j) => i == j
-    }
 
   override def toString: String =
     i.toString
-}
 
-case object W extends NW {
+case object W extends NW:
   def +(nw: NW): W.type = W
 
   def -(nw: NW): W.type = W
@@ -55,9 +50,8 @@ case object W extends NW {
   def isIn(nw: NW): Boolean = W == nw
 
   override def toString = "ω"
-}
 
-trait CountersWorld {
+trait CountersWorld:
 
   import scala.language.implicitConversions
 
@@ -70,9 +64,8 @@ trait CountersWorld {
   val rules: List[Rule]
   val isUnsafe: C => Boolean
 
-}
 
-trait CountersScWorld extends ScWorld[List[NW]] {
+trait CountersScWorld extends ScWorld[List[NW]]:
 
   val cnt: CountersWorld
   val maxN: Int
@@ -86,9 +79,8 @@ trait CountersScWorld extends ScWorld[List[NW]] {
   override def isDangerous(h: History): Boolean =
     h.exists(isTooBig) || h.length >= maxDepth
 
-  override def isFoldableTo(c1: C, c2: C): Boolean = {
-    c1.lazyZip(c2).forall { case (nw1, nw2) => nw1 isIn nw2 }
-  }
+  override def isFoldableTo(c1: C, c2: C): Boolean =
+    c1.lazyZip(c2).forall { case (nw1, nw2) => nw1 `isIn` nw2 }
 
   // Driving is deterministic
   def drive(c: C): List[C] =
@@ -97,15 +89,12 @@ trait CountersScWorld extends ScWorld[List[NW]] {
   // Rebuilding is not deterministic,
   // but makes a single configuration from a configuration.
 
-  def rebuild1: NW => List[NW] = {
+  def rebuild1: NW => List[NW] =
     case W => List(W)
     case N(i) => List[NW](i, W)
-  }
 
-  def rebuild(c: C): List[C] = {
+  def rebuild(c: C): List[C] =
     cartesian(c.map(rebuild1)).filterNot(_ == c)
-  }
 
   override def develop(c: C): List[List[C]] =
     List(drive(c)) ::: rebuild(c).map(List(_))
-}

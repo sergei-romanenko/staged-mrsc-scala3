@@ -17,7 +17,7 @@ import smrsc.LazyCograph._
 // by the "lazy" (staged) version of multi-result
 // supercompilation.
 
-trait BigStepSс8L[C] {
+trait BigStepSс8L[C]:
 
   this: ScWorld[C] =>
 
@@ -26,20 +26,19 @@ trait BigStepSс8L[C] {
   // `isDangerous(h)` may be evaluated several times for the same `h`.
   // Here we avoid this by evaluating `isDangerous(h)` in a lazy way.
 
-  case class LH(h: History) {
+  case class LH(h: History):
     lazy val dangerous: Boolean = isDangerous(h)
 
     def foldable(c: C): Boolean = isFoldableToHistory(c, h)
 
     def ::(c: C): LH = LH(c :: h)
-  }
 
   object LHNil extends LH(Nil) {}
 
   // build_cograph
 
   def build_cograph_loop(w: LH)(c: C): LazyCograph[C] =
-    if (w.foldable(c))
+    if w.foldable(c) then
       Stop8(c)
     else
       Build8(c,
@@ -51,16 +50,15 @@ trait BigStepSс8L[C] {
 
   // prune-cograph
 
-  def prune_cograph_loop(w: LH): LazyCograph[C] => LazyGraph[C] = {
+  def prune_cograph_loop(w: LH): LazyCograph[C] => LazyGraph[C] =
     case Empty8 => Empty
     case Stop8(c) => Stop(c)
     case Build8(c, lss) =>
-      if (w.dangerous)
+      if w.dangerous then
         Empty
       else
         Build(c,
           lss.map(_.map(prune_cograph_loop(c :: w))))
-  }
 
   def prune_cograph(l: LazyCograph[C]): LazyGraph[C] =
     prune_cograph_loop(LHNil)(l)
@@ -85,17 +83,16 @@ trait BigStepSс8L[C] {
   //     unroll( clean (lazy-mrsc c) )
   //
 
-  def cl8_bad_conf(bad: C => Boolean): LazyCograph[C] => LazyCograph[C] = {
+  def cl8_bad_conf(bad: C => Boolean): LazyCograph[C] => LazyCograph[C] =
     case Empty8 =>
       Empty8
     case Stop8(c) =>
-      if (bad(c)) Empty8 else
+      if bad(c) then Empty8 else
         Stop8(c)
     case Build8(c, lss) =>
-      if (bad(c)) Empty8 else
+      if bad(c) then Empty8 else
         Build8(c,
           lss.map(_.map(cl8_bad_conf(bad))))
-  }
 
   //
   // A cograph can be cleaned to remove some empty alternatives.
@@ -106,7 +103,7 @@ trait BigStepSс8L[C] {
   // by `cl-empty`.
   //
 
-  def cl8_empty(l: LazyCograph[C]): LazyCograph[C] = l match {
+  def cl8_empty(l: LazyCograph[C]): LazyCograph[C] = l match
     case Empty8 =>
       Empty8
     case Stop8(c) =>
@@ -116,26 +113,23 @@ trait BigStepSс8L[C] {
         lss
           .filterNot(_.contains(Empty8))
           .map(_.map(cl8_empty)))
-  }
 
   // An optimized version of `prune-cograph`.
   // The difference is that empty subtrees are removed
   // "on the fly".
 
-  def prune_loop(w: LH): LazyCograph[C] => LazyGraph[C] = {
+  def prune_loop(w: LH): LazyCograph[C] => LazyGraph[C] =
     case Empty8 => Empty
     case Stop8(c) => Stop(c)
     case Build8(c, lss) =>
-      if (w.dangerous)
+      if w.dangerous then
         Empty
       else
         Build(c,
           lss
             .filterNot(_.contains(Empty8))
             .map(_.map(prune_loop(c :: w))))
-  }
 
   def prune(l: LazyCograph[C]): LazyGraph[C] =
     prune_loop(LHNil)(l)
 
-}

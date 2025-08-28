@@ -4,7 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 import smrsc.Statistics._
 
-class StatisticsTests extends AnyFunSuite {
+class StatisticsTests extends AnyFunSuite:
 
   object TestSc extends BigStepSc[Int] with TestScWorld {}
 
@@ -20,4 +20,3 @@ class StatisticsTests extends AnyFunSuite {
   test(testName = "size_unroll") {
     assert(size_unroll(l1) == (ul1.length , ul1.map(graph_size).sum))
   }
-}

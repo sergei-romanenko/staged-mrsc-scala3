@@ -4,9 +4,9 @@ import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 import smrsc._
 
-class CountersScTests extends AnyFunSuite {
+class CountersScTests extends AnyFunSuite:
 
-  object TestProtocol extends CountersWorld {
+  object TestProtocol extends CountersWorld:
 
     val start: C = List(2, 0)
     val rules: List[Rule] = List(
@@ -15,14 +15,12 @@ class CountersScTests extends AnyFunSuite {
     )
 
     val isUnsafe: C => Boolean = _ => false
-  }
 
   object TestProtocolSc extends BigStepSc[List[NW]]
-    with CountersScWorld {
+    with CountersScWorld:
     val cnt = TestProtocol
     val maxN = 3
     val maxDepth = 10
-  }
 
   import TestProtocol._
   import TestProtocolSc._
@@ -42,4 +40,3 @@ class CountersScTests extends AnyFunSuite {
     assert(unroll(ml).head == mg)
   }
 
-}

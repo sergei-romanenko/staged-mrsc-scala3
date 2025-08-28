@@ -3,7 +3,7 @@ package smrsc
 import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 
-class GraphTests extends AnyFunSuite {
+class GraphTests extends AnyFunSuite:
 
   type IGraph = Graph[Int]
   type ILazyGraph = LazyGraph[Int]
@@ -131,4 +131,3 @@ class GraphTests extends AnyFunSuite {
           List(Back(4))))))
   }
 
-}

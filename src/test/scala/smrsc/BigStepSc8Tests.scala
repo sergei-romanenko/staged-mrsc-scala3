@@ -2,7 +2,7 @@ package smrsc
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class BigStepSc8Tests extends AnyFunSuite {
+class BigStepSc8Tests extends AnyFunSuite:
 
   object TestSc8 extends BigStepSc[Int]
     with BigStepSс8[Int] with TestScWorld {}
@@ -14,4 +14,3 @@ class BigStepSc8Tests extends AnyFunSuite {
     val plc = prune(build_cograph(0))
     assert(l == plc)
   }
-}

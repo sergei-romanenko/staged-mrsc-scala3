@@ -3,7 +3,7 @@ package smrsc
 import org.scalatest.funsuite.AnyFunSuite
 import smrsc.Graph._
 
-class BigStepScTests extends AnyFunSuite {
+class BigStepScTests extends AnyFunSuite:
 
   object TestSc extends BigStepSc[Int] with TestScWorld {}
 
@@ -30,4 +30,3 @@ class BigStepScTests extends AnyFunSuite {
       List(Forth(0, List(Forth(1, List(Forth(2, List(Back(1)))))))))
   }
 
-}

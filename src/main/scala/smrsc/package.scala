@@ -1,4 +1,4 @@
-package object smrsc {
+package object smrsc:
 
   //
   // Cartesian product
@@ -9,4 +9,3 @@ package object smrsc {
       case (xs, yss) =>
         xs.flatMap(x => yss.map(x :: _))
     }
-}

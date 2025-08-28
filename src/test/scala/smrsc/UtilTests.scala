@@ -2,12 +2,11 @@ package smrsc
 
 import org.scalatest.funsuite.AnyFunSuite
 
-class UtilTests extends AnyFunSuite {
+class UtilTests extends AnyFunSuite:
 
-  def testCartesian(g: List[List[Int]], e: List[List[Int]]): Unit = {
+  def testCartesian(g: List[List[Int]], e: List[List[Int]]): Unit =
     val actual = cartesian(g)
     assert(actual == e)
-  }
 
   test(testName = "cartesian0") {
     testCartesian(
@@ -45,4 +44,3 @@ class UtilTests extends AnyFunSuite {
         List(2, 20, 100), List(2, 20, 200),
         List(2, 30, 100), List(2, 30, 200)))
   }
-}
