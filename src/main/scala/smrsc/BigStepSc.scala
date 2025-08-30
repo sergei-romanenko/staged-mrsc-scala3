@@ -34,7 +34,7 @@ package smrsc
 //   configurations such that `cs ∈ develop(c)`. Then `c` can be "reduced to"
 //   (or "decomposed into") configurations in `cs`.
 //
-//   Suppose that driving is determinstic and, given a configuration `c`,
+//   Suppose that driving is deterministic and, given a configuration `c`,
 //   produces a list of configurations `drive(c)`. Suppose that rebuilding
 //   (generalization, application of lemmas) is non-deterministic and
 //   `rebuild(c)` is the list of configurations that can be produced by
@@ -70,14 +70,12 @@ trait BigStepSc[C]:
 
   this: ScWorld[C] =>
 
-  //Big-step multi-result supercompilation
+  // Big-step multi-result supercompilation
   // (The naive version builds Cartesian products immediately.)
 
   def naive_mrsc_loop(h: History)(c: C): List[Graph[C]] =
-    if isFoldableToHistory(c, h) then
-      List(Back(c))
-    else if isDangerous(h) then
-      List()
+    if isFoldableToHistory(c, h) then List(Back(c))
+    else if isDangerous(h) then List()
     else
       develop(c)
         .flatMap(cs => cartesian(cs.map(naive_mrsc_loop(c :: h))))
@@ -94,14 +92,9 @@ trait BigStepSc[C]:
   // returned by lazy_mrsc.
 
   def lazy_mrsc_loop(h: History)(c: C): LazyGraph[C] =
-    if isFoldableToHistory(c, h) then
-      Stop(c)
-    else if isDangerous(h) then
-      Empty
-    else
-      Build(c,
-        develop(c).map(_.map(lazy_mrsc_loop(c :: h))))
+    if isFoldableToHistory(c, h) then Stop(c)
+    else if isDangerous(h) then Empty
+    else Build(c, develop(c).map(_.map(lazy_mrsc_loop(c :: h))))
 
   def lazy_mrsc(c: C): LazyGraph[C] =
     lazy_mrsc_loop(Nil)(c)
-

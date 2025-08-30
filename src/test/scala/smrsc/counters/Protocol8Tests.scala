@@ -71,4 +71,3 @@ class Protocol8Tests extends AnyFunSuite:
   test(testName = "DataRace") {
     runMinSc(DataRace, m = 3, d = 10)
   }
-

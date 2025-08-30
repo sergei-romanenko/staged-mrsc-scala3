@@ -4,8 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class BigStepSc8Tests extends AnyFunSuite:
 
-  object TestSc8 extends BigStepSc[Int]
-    with BigStepSс8[Int] with TestScWorld {}
+  object TestSc8 extends BigStepSc[Int] with BigStepSс8[Int] with TestScWorld {}
 
   import TestSc8._
 

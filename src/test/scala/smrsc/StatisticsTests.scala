@@ -18,5 +18,5 @@ class StatisticsTests extends AnyFunSuite:
   }
 
   test(testName = "size_unroll") {
-    assert(size_unroll(l1) == (ul1.length , ul1.map(graph_size).sum))
+    assert(size_unroll(l1) == (ul1.length, ul1.map(graph_size).sum))
   }

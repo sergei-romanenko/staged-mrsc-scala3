@@ -16,12 +16,12 @@ sealed trait NW:
 case class N(i: Int) extends NW:
   def +(nw: NW): NW =
     nw match
-      case W => W
+      case W    => W
       case N(j) => N(i + j)
 
   def -(nw: NW): NW =
     nw match
-      case W => W
+      case W    => W
       case N(j) => N(i - j)
 
   def >=(j: Int): Boolean =
@@ -32,7 +32,7 @@ case class N(i: Int) extends NW:
 
   def isIn(nw: NW): Boolean =
     nw match
-      case W => true
+      case W    => true
       case N(j) => i == j
 
   override def toString: String =
@@ -64,7 +64,6 @@ trait CountersWorld:
   val rules: List[Rule]
   val isUnsafe: C => Boolean
 
-
 trait CountersScWorld extends ScWorld[List[NW]]:
 
   val cnt: CountersWorld
@@ -74,7 +73,10 @@ trait CountersScWorld extends ScWorld[List[NW]]:
   import cnt._
 
   private def isTooBig(c: C): Boolean =
-    c.exists { case W => false case N(i) => i >= maxN }
+    c.exists {
+      case W    => false
+      case N(i) => i >= maxN
+    }
 
   override def isDangerous(h: History): Boolean =
     h.exists(isTooBig) || h.length >= maxDepth
@@ -90,7 +92,7 @@ trait CountersScWorld extends ScWorld[List[NW]]:
   // but makes a single configuration from a configuration.
 
   def rebuild1: NW => List[NW] =
-    case W => List(W)
+    case W    => List(W)
     case N(i) => List[NW](i, W)
 
   def rebuild(c: C): List[C] =

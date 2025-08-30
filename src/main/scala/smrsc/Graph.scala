@@ -79,14 +79,14 @@ sealed trait LazyCograph[+C]
 
 object LazyCograph:
 
-  case object Empty8
-    extends LazyCograph[Nothing]
+  case object Empty8 extends LazyCograph[Nothing]
 
-  case class Stop8[C](c: C)
-    extends LazyCograph[C]
+  case class Stop8[C](c: C) extends LazyCograph[C]
 
-  case class Build8[C] private (val c: C, val lss: () => List[List[LazyCograph[C]]])
-    extends LazyCograph[C]
+  case class Build8[C] private (
+      val c: C,
+      val lss: () => List[List[LazyCograph[C]]]
+  ) extends LazyCograph[C]
 
   object Build8:
     def apply[C](c: C, lss: => List[List[LazyCograph[C]]]): LazyCograph[C] =
@@ -96,7 +96,6 @@ object LazyCograph:
     def unapply[C](arg: Build8[C]): Some[(C, List[List[LazyCograph[C]]])] =
       Some(arg.c, arg.lss())
 
-
 object Graph:
 
   // The semantics of a `LazyGraph a` is formally defined by
@@ -104,7 +103,7 @@ object Graph:
   // the `LazyGraph a` by executing commands recorded in the `LazyGraph a`.
 
   def unroll[C](l: LazyGraph[C]): List[Graph[C]] = l match
-    case Empty => Nil
+    case Empty   => Nil
     case Stop(c) => List(Back(c))
     case Build(c, lss) =>
       lss.flatMap(ls => cartesian(ls.map(unroll[C]))).map(Forth(c, _))
@@ -161,8 +160,8 @@ object Graph:
   // `cl_empty` removes subtrees that represent empty sets of graphs.
 
   def cl_empty[C]: LazyGraph[C] => LazyGraph[C] =
-    case Empty => Empty
-    case Stop(c) => Stop(c)
+    case Empty         => Empty
+    case Stop(c)       => Stop(c)
     case Build(c, lss) => cl_empty_build(c, cl_empty2(lss))
 
   def cl_empty_build[C](c: C, lss: List[List[LazyGraph[C]]]): LazyGraph[C] =
@@ -221,28 +220,29 @@ object Graph:
     case Build(c, lss) =>
       sel_min_size2(lss) match
         case (Long.MaxValue, _) => (Long.MaxValue, Empty)
-        case (k, ls) => (1L + k, Build(c, List(ls)))
+        case (k, ls)            => (1L + k, Build(c, List(ls)))
 
   def select_min2[C](kx1: (Long, C), kx2: (Long, C)): (Long, C) =
     if kx1._1 <= kx2._1 then kx1 else kx2
 
-  def sel_min_size2[C](lss: List[List[LazyGraph[C]]]): (Long, List[LazyGraph[C]]) =
+  def sel_min_size2[C](
+      lss: List[List[LazyGraph[C]]]
+  ): (Long, List[LazyGraph[C]]) =
     lss.foldRight[(Long, List[LazyGraph[C]])](Long.MaxValue, Nil) {
       case (ls, acc) => select_min2(sel_min_size_and(ls), acc)
     }
 
   def sel_min_size_and[C](ls: List[LazyGraph[C]]): (Long, List[LazyGraph[C]]) =
-    ls.foldRight[(Long, List[LazyGraph[C]])]((0L, Nil)) {
-      case (l, acc) =>
-        val (i, l1) = sel_min_size(l)
-        val (j, ls1) = acc
-        (#+#(i, j), l1 :: ls1)
+    ls.foldRight[(Long, List[LazyGraph[C]])]((0L, Nil)) { case (l, acc) =>
+      val (i, l1) = sel_min_size(l)
+      val (j, ls1) = acc
+      (#+#(i, j), l1 :: ls1)
     }
 
   def #+# : (Long, Long) => Long =
     case (Long.MaxValue, _) => Long.MaxValue
     case (_, Long.MaxValue) => Long.MaxValue
-    case (i, j) => i + j
+    case (i, j)             => i + j
 
   //
   // `cl_min_size` is sound:
@@ -250,4 +250,3 @@ object Graph:
   //  Let cl_min_size(l) == (k , l'). Then
   //     unroll(l') ⊆ unroll(l)
   //     k == graph_size (hd (unroll(l')))
-
